@@ -1,0 +1,6 @@
+Game no: x
+
+For Input: x
+Current Player is: Player x
+Player 1 - y	Player 2 - z
+Remaining Black Coins - w	Remaining Red Coins - u
