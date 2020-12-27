@@ -17,7 +17,7 @@ TEST(TakeInputFromFileTest, nonExistentFileAsInputTest) {
 
 TEST(TakeInputFromFileTest, existentFileAsInputTest) {
     // Arrange
-    std::string fileName = "../src/inputs/inputFile.txt";
+    std::string fileName = "../inputs/inputFile.txt";
     std::vector<std::string> inputs;
 
     // Act
