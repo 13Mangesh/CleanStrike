@@ -4,6 +4,7 @@
 
 #ifdef _WIN32
     #define isWindows 1
+    #include <windows.h>
 #endif
 
 #define RESET   "\033[0m"
