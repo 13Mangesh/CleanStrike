@@ -2,7 +2,7 @@
 #include "headers/Player.hpp"
 
 CarromBoard::CarromBoard() {
-    blackCoins = 7;
+    blackCoins = 9;
     redCoins = 1;
     successiveInvalidInputs = 0;
 }

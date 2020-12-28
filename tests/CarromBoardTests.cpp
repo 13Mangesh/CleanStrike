@@ -36,7 +36,7 @@ TEST_F(CarromBoardTest, initialBlackCointTest) {
     const int initialBlackCoins = board->getBlackcoins();
 
     // Assert
-    ASSERT_EQ(initialBlackCoins, 7);
+    ASSERT_EQ(initialBlackCoins, 9);
 }
 
 TEST_F(CarromBoardTest, initialRedCointTest) {
@@ -62,7 +62,7 @@ TEST_F(CarromBoardTest, decrementBlackcoinAfterStrikeTest) {
     board->strike();
     
     // Assert
-    ASSERT_EQ(board->getBlackcoins(), 6);
+    ASSERT_EQ(board->getBlackcoins(), 8);
 }
 
 TEST_F(CarromBoardTest, blackCoinsNotLessThanZeroTest) {
@@ -112,7 +112,7 @@ TEST_F(CarromBoardTest, decrementBlackcoinAfterMultistrikeTest) {
     board->multiStrike();
 
     // Assert
-    ASSERT_EQ(board->getBlackcoins(), 5);
+    ASSERT_EQ(board->getBlackcoins(), 7);
 }
 
 
@@ -220,7 +220,7 @@ TEST_F(CarromBoardTest, decrementBlackcoinAfterDefunctCoinTest) {
     board->defunctCoin();
 
     // Assert
-    ASSERT_EQ(board->getBlackcoins(), 6);
+    ASSERT_EQ(board->getBlackcoins(), 8);
 }
 
 TEST_F(CarromBoardTest, blackCoinsNotLessThanZeroAfterDefunctCoinTest) {
