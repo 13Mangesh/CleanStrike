@@ -19,16 +19,26 @@ using namespace std;
 
 int main() {
     if(isWindows)
-      system("color 07");
+        system("color 07");
+    
     vector<string> inputs;
 
     takeInputFromFile("./inputs/inputFile.txt", inputs);
 
-    for(string inputLine: inputs) {
-        vector<string> matchInputs;
-        removeSpaces(inputLine, matchInputs);
+    // for(string inputLine: inputs) {
+    //     vector<string> matchInputs;
+    //     removeSpaces(inputLine, matchInputs);
         
-        Match newMatch = Match(matchInputs);
+    //     Match newMatch = Match(matchInputs);
+    //     newMatch.startGame();
+    // }
+
+    for(int i = 0; i < inputs.size(); i += 2) {
+        vector<string> matchInputs;
+        string noOfPlayers = inputs[i];
+        removeSpaces(inputs[i+1], matchInputs);
+        
+        Match newMatch = Match(matchInputs, noOfPlayers);
         newMatch.startGame();
     }
 

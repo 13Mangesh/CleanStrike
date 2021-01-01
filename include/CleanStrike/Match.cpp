@@ -1,6 +1,6 @@
 #include "headers/Match.hpp"
 #include <fstream>
-#include<string>
+#include <string>
 
 // Define color scheme for output
 #define RESET   "\033[0m"
@@ -16,12 +16,18 @@
 int Match::gameNumber = 1;
 
 // For testing purposes also initialize the gameResult variable
-Match::Match(std::vector<std::string> input) {
+Match::Match(std::vector<std::string> input, std::string noOfPlayers) {
     this->input = input;
+    this->noOfPlayers = stoi(noOfPlayers);
     gameResult = "None";
     isGameEndedWithResult = false;
-    firstPlayer = Player();
-    secondPlayer = Player();
+    // firstPlayer = Player();
+    // secondPlayer = Player();
+    for(int i = 0; i < this->noOfPlayers; i++) {
+        Player newPlayer = Player();
+        players.push_back(newPlayer);
+    }
+
 }
 
 void printFancyGameNumber() {
@@ -30,6 +36,11 @@ void printFancyGameNumber() {
     std::cout<<MAGENTA<<"#\tGame No: "<<Match::gameNumber++<<"\t#\n"<<RESET;
     std::cout<<MAGENTA<<"#                       #\n"<<RESET;
     std::cout<<MAGENTA<<"#########################\n"<<RESET;
+}
+
+int Match::changePlayer(int i) {
+    int currentPlayerIndex = (i % noOfPlayers);
+    return currentPlayerIndex;
 }
 
 void Match::startGame() {
@@ -46,13 +57,15 @@ void Match::startGame() {
 
     for(int i = 0; i < input.size(); i++) {
         // Change current player logic
-        if (flag & 1) {
-            flag = 0;
-            board.setCurrentPlayer(&firstPlayer);
-        } else {
-            flag = 1;
-            board.setCurrentPlayer(&secondPlayer);
-        }
+        // if (flag & 1) {
+        //     flag = 0;
+        //     board.setCurrentPlayer(&firstPlayer);
+        // } else {
+        //     flag = 1;
+        //     board.setCurrentPlayer(&secondPlayer);
+        // }
+        int indexOfCurrentPlayer = changePlayer(i);
+        board.setCurrentPlayer(&players[indexOfCurrentPlayer]);
 
         // Based on input decide what should be done
         if (input[i] == "1") {
@@ -94,6 +107,17 @@ void Match::startGame() {
     logFile.close();
 }
 
+int Match::whichPlayerIsWinning(int index) {
+    for(int i = 0; i < noOfPlayers; i++) {
+        if(i == index) continue;
+    
+        if(players[index].getScore() >= 5 && ((players[index].getScore() - players[i].getScore())) >= 3) {
+            return index;
+        }
+    }
+    return -1;
+}
+
 bool Match::isGameFinished() {
     int firstPlayerScore = firstPlayer.getScore();
     int secondPlayerScore = secondPlayer.getScore();
@@ -101,25 +125,40 @@ bool Match::isGameFinished() {
     int remainingBlackCoins = board.getBlackcoins();
     int remainingRedCoins = board.getRedcoins();
 
-    if (firstPlayerScore >= 5 && (firstPlayerScore - secondPlayerScore >= 3)) {
-        std::cout<<GREEN<<"WINNER:\tPlayer 1\n"<<RESET;
-        std::cout<<BLUE<<"ScoreCard:\n"<<RESET;
-        std::cout<<CYAN<<"Player 1: "<<firstPlayerScore<<" Points\n"<<RESET;
-        std::cout<<CYAN<<"Player 2: "<<secondPlayerScore<<" Points\n"<<RESET;
-        std::cout<<WHITE<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n"<<RESET;
-        gameResult = "FirstPlayerWins";
-        return true;
+    for(int i = 0; i < noOfPlayers; i++) {
+        if(whichPlayerIsWinning(i) != -1) {
+            std::cout<<GREEN<<"WINNER:\tPlayer "<<i+1<<"\n"<<RESET;
+            std::cout<<BLUE<<"ScoreCard:\n"<<RESET;
+            for(int i = 0; i < noOfPlayers; i++) {
+                std::cout<<CYAN<<"Player : "<<i+1<<" -"<<players[i].getScore()<<" Points\n"<<RESET;
+            }
+            // std::cout<<CYAN<<"Player 2: "<<secondPlayerScore<<" Points\n"<<RESET;
+            // std::cout<<WHITE<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n"<<RESET;
+            std::string winningPlayerIndex = std::to_string(i+1);
+            gameResult = "Player " + winningPlayerIndex + " Wins";
+            return true;
+        }
     }
 
-    if (secondPlayerScore >= 5 && (secondPlayerScore - firstPlayerScore >= 3)) {
-        std::cout<<GREEN<<"WINNER:\tPlayer 2\n"<<RESET;
-        std::cout<<BLUE<<"ScoreCard:\n"<<RESET;
-        std::cout<<CYAN<<"Player 2: "<<secondPlayerScore<<" Points\n"<<RESET;
-        std::cout<<CYAN<<"Player 1: "<<firstPlayerScore<<" Points\n"<<RESET;
-        std::cout<<WHITE<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n"<<RESET;
-        gameResult = "SecondPlayerWins";
-        return true;
-    }
+    // if (firstPlayerScore >= 5 && (firstPlayerScore - secondPlayerScore >= 3)) {
+    //     std::cout<<GREEN<<"WINNER:\tPlayer 1\n"<<RESET;
+    //     std::cout<<BLUE<<"ScoreCard:\n"<<RESET;
+    //     std::cout<<CYAN<<"Player 1: "<<firstPlayerScore<<" Points\n"<<RESET;
+    //     std::cout<<CYAN<<"Player 2: "<<secondPlayerScore<<" Points\n"<<RESET;
+    //     std::cout<<WHITE<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n"<<RESET;
+    //     gameResult = "FirstPlayerWins";
+    //     return true;
+    // }
+
+    // if (secondPlayerScore >= 5 && (secondPlayerScore - firstPlayerScore >= 3)) {
+    //     std::cout<<GREEN<<"WINNER:\tPlayer 2\n"<<RESET;
+    //     std::cout<<BLUE<<"ScoreCard:\n"<<RESET;
+    //     std::cout<<CYAN<<"Player 2: "<<secondPlayerScore<<" Points\n"<<RESET;
+    //     std::cout<<CYAN<<"Player 1: "<<firstPlayerScore<<" Points\n"<<RESET;
+    //     std::cout<<WHITE<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n"<<RESET;
+    //     gameResult = "SecondPlayerWins";
+    //     return true;
+    // }
 
     if((remainingBlackCoins == 0) && (remainingRedCoins == 0)) {
         std::cout<<YELLOW<<"DRAW\n"<<RESET;
